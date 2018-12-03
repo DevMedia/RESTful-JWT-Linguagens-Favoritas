@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { sign } = require('jsonwebtoken');
+const { randomBytes, pbkdf2Sync } = require('crypto');
 
 const UsuarioSchema = new mongoose.Schema({
     nome: String,
@@ -30,15 +31,17 @@ UsuarioSchema.methods.gerarJWT = function() {
             }
         },
         'secret',
-        { expiresIn: 300 }
+        { expiresIn: 30000 }
     );
 };
 
 UsuarioSchema.methods.dadosAutenticados = function() {
     return {
-        _id: this._id,
-        email: this.email,
-        nome: this.nome,
+        usuario: {
+            _id: this._id,
+            email: this.email,
+            nome: this.nome
+        },
         token: this.gerarJWT()
     };
 };

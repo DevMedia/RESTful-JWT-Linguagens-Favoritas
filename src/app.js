@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const routes = require('./routes');
 const { database, parser } = require('./config/config');
 
+mongoose.promise = global.Promise;
+
 const app = express();
 
 app.use(express.json());
