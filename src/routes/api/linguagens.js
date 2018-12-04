@@ -1,13 +1,27 @@
 const Router = require('express').Router();
-const jwt = require('jsonwebtoken');
+const { autenticarRequisicao } = require('../../middleware/auth');
+const Linguagem = require('../../model/Linguagem');
+
+Router.use(autenticarRequisicao);
 
 Router.get('/', (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
+    Linguagem.listarLinguagens()
+        .then(linguagens => res.json(linguagens))
+        .catch(err => next(err));
+});
 
-    jwt.verify(token, 'secret', (err, payload) => {
-        if (err) res.status(401).json({ err: 'acesso não autorizado' });
-        res.json({ data: payload });
-    });
+Router.put('/curtir/:id', (req, res, next) => {
+    const idLinguagem = req.params.id;
+    const idUsuario = res.locals.payload.usuario.id;
+    Linguagem.curtirLinguagem(idLinguagem, idUsuario)
+        .then(linguagem => res.json(linguagem))
+        .catch(err => next(err));
+});
+
+Router.get('/:id', (req, res, next) => {
+    Linguagem.detalhesLinguagem(req.params.id)
+        .then(linguagem => res.json({ linguagem }))
+        .catch(err => next(err));
 });
 
 module.exports = Router;

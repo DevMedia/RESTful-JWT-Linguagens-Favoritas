@@ -26,22 +26,17 @@ UsuarioSchema.methods.gerarJWT = function() {
     return sign(
         {
             usuario: {
+                id: this._id,
                 email: this.email,
-                id: this._id
+                nome: this.nome
             }
         },
-        'secret',
-        { expiresIn: 30000 }
+        'secret'
     );
 };
 
 UsuarioSchema.methods.dadosAutenticados = function() {
     return {
-        usuario: {
-            _id: this._id,
-            email: this.email,
-            nome: this.nome
-        },
         token: this.gerarJWT()
     };
 };

@@ -11,6 +11,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "cors": "^2.8.5",
         "crypto": "^1.0.1",
         "express": "^4.16.4",
         "jsonwebtoken": "^8.4.0",
