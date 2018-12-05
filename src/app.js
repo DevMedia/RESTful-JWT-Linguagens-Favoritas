@@ -5,6 +5,8 @@ const cors = require('cors');
 const database = require('./database/database');
 const routes = require('./routes');
 const { internalServer, notFound } = require('./middleware/errorHandler');
+const environment = process.env.ENV || 'development';
+const { port, host } = require('./config/config')[environment];
 
 database.connect();
 
@@ -16,6 +18,6 @@ app.use(routes);
 app.use(internalServer);
 app.use(notFound);
 
-const port = process.env.EV_PORT || 3000;
-
-app.listen(port, () => console.log(`ouvindo porta ${port}`));
+app.listen(port, host, () => {
+    console.log(`ouvindo ao endereço ${host} na porta ${port}`);
+});
