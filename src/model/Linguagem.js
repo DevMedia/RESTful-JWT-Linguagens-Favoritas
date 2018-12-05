@@ -10,7 +10,6 @@ const LinguagemSchema = new mongoose.Schema(
         surgidoEm: Number,
         ultimaVersao: Number,
         paradigmas: [String],
-        // usuarios: { type: [ObjectId], default: '5c056bd6b567843598f8fa69' }
         usuarios: [SchemaObjectId]
     },
     { collection: 'linguagens' }

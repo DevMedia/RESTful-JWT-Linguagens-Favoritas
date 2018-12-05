@@ -29,7 +29,7 @@ Router.post('/login', (req, res, next) => {
     Usuario.findOne({ email })
         .then(usuario => {
             if (!usuario || !usuario.validarSenha(senha))
-                res.status(401).json({ err: 'usuário ou senha inválidos' });
+                return res.status(401).json({ err: 'usuário ou senha inválidos' });
             return usuario;
         })
         .then(usuario => res.json(usuario.dadosAutenticados()))
