@@ -2,11 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const database = require('./database/database');
 const routes = require('./routes');
 const { internalServer, notFound } = require('./middleware/errorHandler');
-const { database, parser } = require('./config/config');
 
-mongoose.promise = global.Promise;
+database.connect();
 
 const app = express();
 
@@ -15,11 +15,6 @@ app.use(cors());
 app.use(routes);
 app.use(internalServer);
 app.use(notFound);
-
-mongoose.connect(
-    'mongodb://localhost/jwt-auth',
-    { useNewUrlParser: true }
-);
 
 const port = process.env.EV_PORT || 3000;
 

@@ -10,13 +10,13 @@ const UsuarioSchema = new mongoose.Schema({
 });
 UsuarioSchema.methods.definirSenha = function(senha) {
     this.salt = randomBytes(16).toString('hex');
-    this.hash = pbkdf2Sync(senha, this.salt, 100000, 512, 'sha512').toString(
+    this.hash = pbkdf2Sync(senha, this.salt, 1000, 512, 'sha512').toString(
         'hex'
     );
 };
 
 UsuarioSchema.methods.validarSenha = function(senha, callback) {
-    const hash = pbkdf2Sync(senha, this.salt, 100000, 512, 'sha512').toString(
+    const hash = pbkdf2Sync(senha, this.salt, 1000, 512, 'sha512').toString(
         'hex'
     );
     return this.hash === hash;
