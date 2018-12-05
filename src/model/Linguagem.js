@@ -51,8 +51,9 @@ LinguagemSchema.statics.curtirLinguagem = function(idLinguagem, idUsuario) {
         usuarioJaCurte = linguagem.usuarios.filter(
             id => String(id) === idUsuario
         );
-        if (usuarioJaCurte.length)
-            throw new Error('usuário já curte a linguagem');
+        if (usuarioJaCurte.length) {
+            return false;
+        }
 
         return this.updateOne(
             { _id: idLinguagem },
