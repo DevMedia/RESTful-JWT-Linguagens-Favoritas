@@ -3,7 +3,7 @@ const { verify } = require('jsonwebtoken');
 const Usuario = require('../model/Usuario');
 const { validarUsuario } = require('../middleware/validacao');
 
-const cadastro = async (req, res, next) => {
+const cadastro = (req, res, next) => {
     const dadosUsuario = req.body.usuario;
 
     return Usuario.find({ email: dadosUsuario.email }).then(data => {
@@ -20,7 +20,7 @@ const cadastro = async (req, res, next) => {
     });
 };
 
-const login = async (req, res, next) => {
+const login = (req, res, next) => {
     const { email, senha } = req.body.usuario;
 
     Usuario.findOne({ email })
@@ -31,7 +31,10 @@ const login = async (req, res, next) => {
                     .json({ err: 'email ou senha inválidos' });
             return usuario;
         })
-        .then(usuario => res.json(usuario.dadosAutenticados()))
+        // .then(usuario => res.json(usuario.dadosAutenticados()))
+        .then(usuario =>
+            usuario.dadosAutenticados().then(token => res.json(token))
+        )
         .catch(err => next(err));
 };
 

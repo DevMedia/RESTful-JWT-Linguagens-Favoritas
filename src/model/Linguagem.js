@@ -23,7 +23,8 @@ LinguagemSchema.statics.listarLinguagens = function() {
                 urlImagem: 1,
                 numeroUsuarios: { $size: '$usuarios' }
             }
-        }
+        },
+        { $sort: { numeroUsuarios: -1 } }
     ]);
 };
 
@@ -60,6 +61,15 @@ LinguagemSchema.statics.curtirLinguagem = function(idLinguagem, idUsuario) {
             { $push: { usuarios: idUsuario } }
         );
     });
+};
+
+LinguagemSchema.statics.linguagensCurtidasPorUsuario = function(idUsuario) {
+    return this.find({ usuarios: ObjectId(idUsuario) })
+        .select({ _id: 1 })
+        .then(linguagens => linguagens.map(linguagem => linguagem._id))
+        .then(linguagens => {
+            return linguagens;
+        });
 };
 
 module.exports = mongoose.model('Linguagem', LinguagemSchema);

@@ -1,6 +1,10 @@
 const Linguagem = require('../model/Linguagem');
 
 const listar = async (req, res, next) => {
+    const idUsuario = res.locals.payload.usuario.id;
+
+    Linguagem.linguagensCurtidasPorUsuario(idUsuario);
+
     Linguagem.listarLinguagens()
         .then(linguagens => res.json(linguagens))
         .catch(err => next(err));

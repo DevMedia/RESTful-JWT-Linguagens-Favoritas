@@ -1,7 +1,7 @@
 module.exports = {
     development: {
         port: 3000,
-        host: 'localhost',
+        host: '192.168.1.52',
         database: {
             host: 'localhost',
             port: 27017,
