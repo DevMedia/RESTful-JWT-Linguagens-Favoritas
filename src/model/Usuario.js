@@ -37,7 +37,7 @@ UsuarioSchema.methods.gerarJWT = function() {
 
 UsuarioSchema.methods.dadosAutenticados = function() {
     return {
-        toke: this.gerarJWT()
+        token: this.gerarJWT()
     };
 };
 module.exports = mongoose.model('Usuario', UsuarioSchema);
