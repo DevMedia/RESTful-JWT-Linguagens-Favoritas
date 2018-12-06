@@ -15,7 +15,10 @@ const LinguagemSchema = new mongoose.Schema(
     { collection: 'linguagens' }
 );
 
-LinguagemSchema.statics.listarLinguagens = function() {
+LinguagemSchema.statics.listarLinguagens = function(idUsuario) {
+    // return this.linguagensCurtidasPorUsuario(id).then(linguagensCurtidas => {
+
+    // })
     return this.aggregate([
         {
             $project: {

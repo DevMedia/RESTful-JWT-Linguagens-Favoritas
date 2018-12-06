@@ -3,20 +3,25 @@ const Linguagem = require('../model/Linguagem');
 const listar = async (req, res, next) => {
     const idUsuario = res.locals.payload.usuario.id;
 
-    Linguagem.linguagensCurtidasPorUsuario(idUsuario);
+    // Linguagem.linguagensCurtidasPorUsuario(idUsuario).then(linguagens =>
+    //     console.log(linguagens)
+    // );
 
-    Linguagem.listarLinguagens()
+    return Linguagem.listarLinguagens(idUsuario)
         .then(linguagens => res.json(linguagens))
         .catch(err => next(err));
 };
 
-const curtir = async (req, res, next) => {
+const curtir = (req, res, next) => {
     const idLinguagem = req.params.id;
     const idUsuario = res.locals.payload.usuario.id;
-    Linguagem.curtirLinguagem(idLinguagem, idUsuario)
+
+    return Linguagem.curtirLinguagem(idLinguagem, idUsuario)
         .then(disponivel => {
             if (!disponivel) {
-                res.status(409).json({ error: 'usuário já curte a linguagem' });
+                return res
+                    .status(409)
+                    .json({ error: 'usuário já curte a linguagem' });
             }
         })
         .then(linguagem => res.json({ message: 'curtida com sucesso' }))
@@ -24,7 +29,7 @@ const curtir = async (req, res, next) => {
 };
 
 const detalhes = (req, res, next) => {
-    Linguagem.detalhesLinguagem(req.params.id)
+    return Linguagem.detalhesLinguagem(req.params.id)
         .then(linguagem => res.json({ linguagem }))
         .catch(err => next(err));
 };

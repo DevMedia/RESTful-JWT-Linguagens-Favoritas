@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { sign } = require('jsonwebtoken');
 const { randomBytes, pbkdf2Sync } = require('crypto');
-const Linguagem = require('./Linguagem');
 
 const UsuarioSchema = new mongoose.Schema({
     nome: String,
@@ -24,24 +23,21 @@ UsuarioSchema.methods.validarSenha = function(senha, callback) {
 };
 
 UsuarioSchema.methods.gerarJWT = function() {
-    return Linguagem.linguagensCurtidasPorUsuario(this._id).then(linguagens => {
-        return sign(
-            {
-                usuario: {
-                    id: this._id,
-                    email: this.email,
-                    nome: this.nome,
-                    linguagens: linguagens
-                }
-            },
-            'secret'
-        );
-    });
+    return sign(
+        {
+            usuario: {
+                id: this._id,
+                email: this.email,
+                nome: this.nome
+            }
+        },
+        'secret'
+    );
 };
 
 UsuarioSchema.methods.dadosAutenticados = function() {
-    return this.gerarJWT().then(token => ({
-        token
-    }));
+    return {
+        toke: this.gerarJWT()
+    };
 };
 module.exports = mongoose.model('Usuario', UsuarioSchema);

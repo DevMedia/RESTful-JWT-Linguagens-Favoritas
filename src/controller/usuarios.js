@@ -13,6 +13,7 @@ const cadastro = (req, res, next) => {
 
         const usuarioFinal = new Usuario(dadosUsuario);
         usuarioFinal.definirSenha(dadosUsuario.senha);
+
         return usuarioFinal
             .save()
             .then(usuario => res.json(usuario.dadosAutenticados()))
@@ -23,7 +24,7 @@ const cadastro = (req, res, next) => {
 const login = (req, res, next) => {
     const { email, senha } = req.body.usuario;
 
-    Usuario.findOne({ email })
+    return Usuario.findOne({ email })
         .then(usuario => {
             if (!usuario || !usuario.validarSenha(senha))
                 return res
@@ -31,7 +32,6 @@ const login = (req, res, next) => {
                     .json({ err: 'email ou senha inválidos' });
             return usuario;
         })
-        // .then(usuario => res.json(usuario.dadosAutenticados()))
         .then(usuario =>
             usuario.dadosAutenticados().then(token => res.json(token))
         )
