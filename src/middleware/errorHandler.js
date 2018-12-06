@@ -1,8 +1,10 @@
 const internalServer = (err, req, res, next) => {
-    if (err) {
-        console.log(err);
-        return res.status(500).json({ error: err.message });
+    const environment = process.env.ENV || 'development';
+    console.log(err);
+    if (environment === 'production') {
+        return res.status(500).send();
     }
+    return res.status(500).json({ error: err.message });
 };
 
 const notFound = (req, res, next) =>
