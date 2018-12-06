@@ -7,8 +7,7 @@ const {
 const connect = () => {
     mongoose.promise = global.Promise;
     mongoose.connect(
-        // `mongodb://${host}/${name}`,
-        'mongodb://localhost/jwt-auth',
+        `mongodb://${host}/${name}`,
         { useNewUrlParser: true }
     );
 };
