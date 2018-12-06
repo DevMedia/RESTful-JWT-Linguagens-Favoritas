@@ -1,4 +1,5 @@
 const { validate } = require('email-validator');
+const passwordValidator = require('password-validator');
 
 const validarUsuario = (req, res, next) => {
     const { usuario } = req.body;
@@ -22,4 +23,26 @@ const validarUsuario = (req, res, next) => {
     next();
 };
 
-module.exports = { validarUsuario };
+const validarSenha = (req, res, next) => {
+    const { senha } = req.body.usuario;
+
+    const schema = new passwordValidator();
+
+    schema
+        .is()
+        .min(8)
+        .has()
+        .lowercase()
+        .has()
+        .digits()
+        .has()
+        .not()
+        .spaces();
+
+    if (!schema.validate(senha)) {
+        return res.status(400).json({ error: 'senha muito fraca' });
+    }
+    next();
+};
+
+module.exports = { validarUsuario, validarSenha };
