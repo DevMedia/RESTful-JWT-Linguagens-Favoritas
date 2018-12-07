@@ -8,36 +8,5 @@ const UsuarioSchema = new mongoose.Schema({
     hash: String,
     salt: String
 });
-UsuarioSchema.methods.definirSenha = function(senha) {
-    this.salt = randomBytes(16).toString('hex');
-    this.hash = pbkdf2Sync(senha, this.salt, 1000, 512, 'sha512').toString(
-        'hex'
-    );
-};
 
-UsuarioSchema.methods.validarSenha = function(senha) {
-    const hash = pbkdf2Sync(senha, this.salt, 1000, 512, 'sha512').toString(
-        'hex'
-    );
-    return this.hash === hash;
-};
-
-UsuarioSchema.methods.gerarJWT = function() {
-    return sign(
-        {
-            usuario: {
-                id: this._id,
-                email: this.email,
-                nome: this.nome
-            }
-        },
-        'secret'
-    );
-};
-
-UsuarioSchema.methods.dadosAutenticados = function() {
-    return {
-        token: this.gerarJWT()
-    };
-};
 module.exports = mongoose.model('Usuario', UsuarioSchema);

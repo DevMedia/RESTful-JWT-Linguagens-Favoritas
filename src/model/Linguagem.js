@@ -16,7 +16,6 @@ const LinguagemSchema = new mongoose.Schema(
 );
 
 LinguagemSchema.statics.listarLinguagens = function(idUsuario) {
-    console.log(idUsuario);
     return this.aggregate([
         {
             $project: {
@@ -59,21 +58,21 @@ LinguagemSchema.statics.detalhesLinguagem = function(idLinguagem) {
 
 LinguagemSchema.statics.curtirLinguagem = function(idLinguagem, idUsuario) {
     return this.findById(idLinguagem).then(linguagem => {
-        retorno = { disponivel: false };
+        curtida = { efetuada: false };
 
         usuarioJaCurte = linguagem.usuarios.filter(
             id => String(id) === idUsuario
         );
 
         if (!usuarioJaCurte.length > 0) {
-            retorno.disponivel = true;
-            retorno.linguagem = this.updateOne(
+            curtida.linguagem = this.updateOne(
                 { _id: idLinguagem },
                 { $push: { usuarios: idUsuario } }
             );
+            curtida.efetuada = true;
         }
 
-        return retorno;
+        return curtida;
     });
 };
 

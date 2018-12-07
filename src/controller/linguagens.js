@@ -1,6 +1,6 @@
 const Linguagem = require('../model/Linguagem');
 
-const listar = async (req, res, next) => {
+const listar = (req, res, next) => {
     const idUsuario = res.locals.payload.usuario.id;
 
     return Linguagem.listarLinguagens(idUsuario)
