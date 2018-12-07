@@ -15,7 +15,7 @@ UsuarioSchema.methods.definirSenha = function(senha) {
     );
 };
 
-UsuarioSchema.methods.validarSenha = function(senha, callback) {
+UsuarioSchema.methods.validarSenha = function(senha) {
     const hash = pbkdf2Sync(senha, this.salt, 1000, 512, 'sha512').toString(
         'hex'
     );

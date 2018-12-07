@@ -26,10 +26,11 @@ const login = (req, res, next) => {
 
     return Usuario.findOne({ email })
         .then(usuario => {
-            if (!usuario || !usuario.validarSenha(senha))
+            if (!usuario || !usuario.validarSenha(senha)) {
                 return res
                     .status(401)
                     .json({ err: 'email ou senha inválidos' });
+            }
             return usuario;
         })
         .then(usuario => res.json(usuario.dadosAutenticados()))

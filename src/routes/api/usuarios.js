@@ -4,9 +4,9 @@ const { validarUsuario, validarSenha } = require('../../middleware/validacao');
 const controller = require('../../controller/usuarios');
 
 Router.use(validarUsuario);
-Router.use('/signup', validarSenha);
+Router.use('/cadastrar', validarSenha);
 
-Router.post('/signup', controller.cadastro);
+Router.post('/cadastrar', controller.cadastro);
 
 Router.post('/login', controller.login);
 
