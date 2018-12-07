@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-
 const ObjectId = mongoose.Schema.Types.ObjectId;
+
 const LinguagemSchema = new mongoose.Schema(
     {
         nome: String,
