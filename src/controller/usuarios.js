@@ -1,6 +1,3 @@
-const { verify } = require('jsonwebtoken');
-
-const Usuario = require('../model/Usuario');
 const { cadastrarUsuario, logarUsuario } = require('../repository/usuarios');
 
 const cadastro = (req, res, next) => {

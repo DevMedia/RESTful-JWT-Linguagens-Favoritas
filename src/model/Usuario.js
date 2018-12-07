@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const { sign } = require('jsonwebtoken');
-const { randomBytes, pbkdf2Sync } = require('crypto');
 
 const UsuarioSchema = new mongoose.Schema({
     nome: String,

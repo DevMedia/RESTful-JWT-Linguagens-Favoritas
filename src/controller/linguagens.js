@@ -1,9 +1,14 @@
 const Linguagem = require('../model/Linguagem');
+const {
+    listarLinguagens,
+    curtirLinguagem,
+    detalhesLinguagem
+} = require('../repository/linguagens');
 
 const listar = (req, res, next) => {
     const idUsuario = res.locals.payload.usuario.id;
 
-    return Linguagem.listarLinguagens(idUsuario)
+    return listarLinguagens(idUsuario)
         .then(linguagens => res.json(linguagens))
         .catch(err => next(err));
 };
@@ -12,20 +17,20 @@ const curtir = (req, res, next) => {
     const idLinguagem = req.params.id;
     const idUsuario = res.locals.payload.usuario.id;
 
-    return Linguagem.curtirLinguagem(idLinguagem, idUsuario)
-        .then(retorno => {
-            if (!retorno.disponivel) {
+    return curtirLinguagem(idLinguagem, idUsuario)
+        .then(disponivel => {
+            if (!disponivel) {
                 return res
                     .status(409)
                     .json({ error: 'usuário já curte a linguagem' });
             }
-            return res.json({ message: 'curtida com sucesso' });
         })
+        .then(linguagem => res.json({ message: 'curtida com sucesso' }))
         .catch(err => next(err));
 };
 
 const detalhes = (req, res, next) => {
-    return Linguagem.detalhesLinguagem(req.params.id)
+    return detalhesLinguagem(req.params.id)
         .then(linguagem => res.json({ linguagem }))
         .catch(err => next(err));
 };
