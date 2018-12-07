@@ -2,11 +2,7 @@ const { validate } = require('email-validator');
 const passwordValidator = require('password-validator');
 
 const validarUsuario = (req, res, next) => {
-    const { usuario } = req.body;
-
-    if (!usuario) {
-        return res.status(400).json({ error: 'campo usuario é obrigatório' });
-    }
+    const usuario = req.body;
 
     const { email, senha } = usuario;
 
@@ -24,7 +20,7 @@ const validarUsuario = (req, res, next) => {
 };
 
 const validarSenha = (req, res, next) => {
-    const { senha } = req.body.usuario;
+    const { senha } = req.body;
 
     const schema = new passwordValidator();
 

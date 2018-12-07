@@ -4,7 +4,7 @@ const Usuario = require('../model/Usuario');
 const { validarUsuario } = require('../middleware/validacao');
 
 const cadastro = (req, res, next) => {
-    const dadosUsuario = req.body.usuario;
+    const dadosUsuario = req.body;
 
     return Usuario.find({ email: dadosUsuario.email }).then(data => {
         if (data.length) {
@@ -22,7 +22,7 @@ const cadastro = (req, res, next) => {
 };
 
 const login = (req, res, next) => {
-    const { email, senha } = req.body.usuario;
+    const { email, senha } = req.body;
 
     return Usuario.findOne({ email })
         .then(usuario => {
