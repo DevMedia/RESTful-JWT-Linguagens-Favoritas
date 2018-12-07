@@ -16,18 +16,25 @@ const LinguagemSchema = new mongoose.Schema(
 );
 
 LinguagemSchema.statics.listarLinguagens = function(idUsuario) {
-    // return this.linguagensCurtidasPorUsuario(id).then(linguagensCurtidas => {
-
-    // })
+    console.log(idUsuario);
     return this.aggregate([
         {
             $project: {
                 nome: 1,
                 urlImagem: 1,
-                numeroUsuarios: { $size: '$usuarios' }
+                numeroUsuarios: { $size: '$usuarios' },
+                usuarioCurte: {
+                    $cond: {
+                        if: {
+                            $in: [ObjectId(idUsuario), '$usuarios']
+                        },
+                        then: 'true',
+                        else: 'false'
+                    }
+                }
             }
         },
-        { $sort: { numeroUsuarios: -1 } }
+        { $sort: { nome: 1 } }
     ]);
 };
 
@@ -55,7 +62,8 @@ LinguagemSchema.statics.curtirLinguagem = function(idLinguagem, idUsuario) {
         usuarioJaCurte = linguagem.usuarios.filter(
             id => String(id) === idUsuario
         );
-        if (usuarioJaCurte.length) {
+        if (usuarioJaCurte.length > 0) {
+            console.log(usuarioJaCurte);
             return false;
         }
 

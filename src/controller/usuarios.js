@@ -32,9 +32,7 @@ const login = (req, res, next) => {
                     .json({ err: 'email ou senha inválidos' });
             return usuario;
         })
-        .then(usuario =>
-            usuario.dadosAutenticados().then(token => res.json(token))
-        )
+        .then(usuario => res.json(usuario.dadosAutenticados()))
         .catch(err => next(err));
 };
 

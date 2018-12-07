@@ -3,10 +3,6 @@ const Linguagem = require('../model/Linguagem');
 const listar = async (req, res, next) => {
     const idUsuario = res.locals.payload.usuario.id;
 
-    // Linguagem.linguagensCurtidasPorUsuario(idUsuario).then(linguagens =>
-    //     console.log(linguagens)
-    // );
-
     return Linguagem.listarLinguagens(idUsuario)
         .then(linguagens => res.json(linguagens))
         .catch(err => next(err));
@@ -23,6 +19,7 @@ const curtir = (req, res, next) => {
                     .status(409)
                     .json({ error: 'usuário já curte a linguagem' });
             }
+            return disponivel;
         })
         .then(linguagem => res.json({ message: 'curtida com sucesso' }))
         .catch(err => next(err));
