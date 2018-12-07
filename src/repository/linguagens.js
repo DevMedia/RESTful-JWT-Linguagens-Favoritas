@@ -15,8 +15,8 @@ const listarLinguagens = idUsuario => {
                         if: {
                             $in: [ObjectId(idUsuario), '$usuarios']
                         },
-                        then: 'true',
-                        else: 'false'
+                        then: true,
+                        else: false
                     }
                 }
             }

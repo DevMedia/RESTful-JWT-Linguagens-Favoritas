@@ -22,10 +22,10 @@ const curtir = (req, res, next) => {
             if (!disponivel) {
                 return res
                     .status(409)
-                    .json({ error: 'usuário já curte a linguagem' });
+                    .json({ error: 'Usuário já curte a linguagem.' });
             }
         })
-        .then(linguagem => res.json({ message: 'curtida com sucesso' }))
+        .then(linguagem => res.json({ message: 'Curtida com sucesso.' }))
         .catch(err => next(err));
 };
 
