@@ -59,18 +59,21 @@ LinguagemSchema.statics.detalhesLinguagem = function(idLinguagem) {
 
 LinguagemSchema.statics.curtirLinguagem = function(idLinguagem, idUsuario) {
     return this.findById(idLinguagem).then(linguagem => {
+        retorno = { disponivel: false };
+
         usuarioJaCurte = linguagem.usuarios.filter(
             id => String(id) === idUsuario
         );
-        if (usuarioJaCurte.length > 0) {
-            console.log(usuarioJaCurte);
-            return false;
+
+        if (!usuarioJaCurte.length > 0) {
+            retorno.disponivel = true;
+            retorno.linguagem = this.updateOne(
+                { _id: idLinguagem },
+                { $push: { usuarios: idUsuario } }
+            );
         }
 
-        return this.updateOne(
-            { _id: idLinguagem },
-            { $push: { usuarios: idUsuario } }
-        );
+        return retorno;
     });
 };
 

@@ -13,15 +13,14 @@ const curtir = (req, res, next) => {
     const idUsuario = res.locals.payload.usuario.id;
 
     return Linguagem.curtirLinguagem(idLinguagem, idUsuario)
-        .then(disponivel => {
-            if (!disponivel) {
+        .then(retorno => {
+            if (!retorno.disponivel) {
                 return res
                     .status(409)
                     .json({ error: 'usuário já curte a linguagem' });
             }
-            return disponivel;
+            return res.json({ message: 'curtida com sucesso' });
         })
-        .then(linguagem => res.json({ message: 'curtida com sucesso' }))
         .catch(err => next(err));
 };
 
