@@ -16,7 +16,7 @@ const validarUsuario = (req, res, next) => {
         return res.status(400).json({ error: 'formato de email inválido' });
     }
 
-    next();
+    return next();
 };
 
 const validarSenha = (req, res, next) => {
@@ -38,7 +38,7 @@ const validarSenha = (req, res, next) => {
     if (!schema.validate(senha)) {
         return res.status(400).json({ error: 'senha muito fraca' });
     }
-    next();
+    return next();
 };
 
 module.exports = { validarUsuario, validarSenha };

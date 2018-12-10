@@ -19,7 +19,7 @@ const autenticarRequisicao = (req, res, next) => {
         }
         res.locals.payload = payload;
     });
-    next();
+    return next();
 };
 
 module.exports = { autenticarRequisicao };
