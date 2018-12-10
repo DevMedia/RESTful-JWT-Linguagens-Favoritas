@@ -1,4 +1,3 @@
-const { verify } = require('jsonwebtoken');
 const { checarToken } = require('../repository/blackList');
 const { verificarToken } = require('../service/auth');
 
