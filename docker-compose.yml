@@ -15,6 +15,7 @@ services:
       -DB_HOST=mongo
       -DB_PORT=27017
       -DB_NAME=jwt-auth
+      -ENV=production
   mongo:
      container_name: mongo
      image: mongo
