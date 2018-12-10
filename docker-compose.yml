@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web:
+    build: .
+    container_name: web
+    ports:
+      - 3000:3000
+    networks:
+      - nodeapp
+    environment:
+      - EV_PORT=3000
+      - EV_HOST=0.0.0.0
+      - DB_HOST=mongo
+      - DB_PORT=27017
+      - DB_NAME=jwt-auth
+      - ENV=production
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - nodeapp
+networks:
+  nodeapp:
+    driver: bridge

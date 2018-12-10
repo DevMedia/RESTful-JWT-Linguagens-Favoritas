@@ -3,7 +3,7 @@ module.exports = {
         port: 3000,
         host: 'localhost',
         database: {
-            host: 'localhost',
+            host: 'mongo',
             port: 27017,
             name: 'jwt-auth'
         }
