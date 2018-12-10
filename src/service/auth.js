@@ -1,4 +1,4 @@
-const { sign } = require('jsonwebtoken');
+const { sign, verify } = require('jsonwebtoken');
 const { randomBytes, pbkdf2Sync } = require('crypto');
 
 const gerarJWT = (id, email, nome) => {
@@ -29,4 +29,8 @@ const senhaConfere = (senha, cadastrado) => {
     );
 };
 
-module.exports = { gerarCredenciais, gerarJWT, senhaConfere };
+const verificarToken = (token, callback) => {
+    verify(token, 'secret', callback);
+};
+
+module.exports = { gerarCredenciais, gerarJWT, senhaConfere, verificarToken };

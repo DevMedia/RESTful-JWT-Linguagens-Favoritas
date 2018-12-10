@@ -1,5 +1,6 @@
 const { verify } = require('jsonwebtoken');
 const { checarToken } = require('../repository/blackList');
+const { verificarToken } = require('../service/auth');
 
 const autenticarRequisicao = (req, res, next) => {
     if (!req.headers.authorization) {
@@ -13,13 +14,13 @@ const autenticarRequisicao = (req, res, next) => {
         }
     });
 
-    verify(token, 'secret', (err, payload) => {
+    verificarToken(token, (err, payload) => {
         if (err) {
-            return res.status(401).json({ err: 'acesso não autorizado' });
+            return res.status(401).json({ error: 'acesso não autorizado' });
         }
         res.locals.payload = payload;
+        return next();
     });
-    return next();
 };
 
 module.exports = { autenticarRequisicao };
