@@ -1,0 +1,21 @@
+web:
+  build: .
+  container_name: web
+  ports:
+    - 3000:3000
+  network:
+    - mongodb
+  ports:
+    - 3000:3000
+  networks:
+    - nodeapp
+mongo:
+   container_name: mongo
+   image: mongo
+   volumes:
+     - ./data:/data/db
+   ports:
+     - "27017:27017"
+networks:
+  nodeapp:
+    driver: bridge
