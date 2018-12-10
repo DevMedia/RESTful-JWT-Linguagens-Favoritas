@@ -4,11 +4,12 @@ const {
     database: { name, port, host }
 } = require('../config/config')[environment];
 
-const connect = () => {
+const connect = callback => {
     mongoose.promise = global.Promise;
     mongoose.connect(
         `mongodb://${host}/${name}`,
-        { useNewUrlParser: true }
+        { useNewUrlParser: true },
+        callback
     );
 };
 

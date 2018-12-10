@@ -30,7 +30,7 @@ const senhaConfere = (senha, cadastrado) => {
 };
 
 const verificarToken = (token, callback) => {
-    verify(token, 'secret', callback);
+    return verify(token, 'secret', callback);
 };
 
 module.exports = { gerarCredenciais, gerarJWT, senhaConfere, verificarToken };
