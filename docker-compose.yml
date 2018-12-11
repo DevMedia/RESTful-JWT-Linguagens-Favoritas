@@ -14,6 +14,9 @@ services:
             - DB_PORT=27017
             - DB_NAME=jwt-auth
             - ENV=production
+            - JWT_SECRET=486f805PXd0k705c9q5EZ95yF
+        volumes:
+            - './src:/src'
         depends_on:
             - mongo
     mongo:
