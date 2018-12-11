@@ -10,7 +10,7 @@ const gerarJWT = (id, email, nome) => {
                 nome
             }
         },
-        'secret'
+        '123qwe@'
     );
     return { token };
 };
@@ -30,7 +30,7 @@ const senhaConfere = (senha, cadastrado) => {
 };
 
 const verificarToken = (token, callback) => {
-    return verify(token, 'secret', callback);
+    return verify(token, '123qwe@', callback);
 };
 
 module.exports = { gerarCredenciais, gerarJWT, senhaConfere, verificarToken };
