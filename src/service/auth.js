@@ -1,6 +1,12 @@
 const { sign, verify } = require('jsonwebtoken');
 const { randomBytes, pbkdf2Sync } = require('crypto');
 
+const secret = () => {
+    const environment = process.env.ENV || 'development';
+    if (environment === 'production') return process.env.JWT_SECRET;
+    return '1C3C7E1694F1E9DAD939399E87E5FFB5DF06B2327CA31B409CB329B1430F1CD3';
+};
+
 const gerarJWT = (id, email, nome) => {
     const token = sign(
         {
@@ -10,7 +16,7 @@ const gerarJWT = (id, email, nome) => {
                 nome
             }
         },
-        '123qwe@'
+        secret()
     );
     return { token };
 };
@@ -30,7 +36,7 @@ const senhaConfere = (senha, cadastrado) => {
 };
 
 const verificarToken = (token, callback) => {
-    return verify(token, '123qwe@', callback);
+    return verify(token, secret(), callback);
 };
 
 module.exports = { gerarCredenciais, gerarJWT, senhaConfere, verificarToken };
