@@ -59,11 +59,11 @@ database.connect(err => {
             httpsServer.listen(portHttps, () => {
                 console.log(`ouvindo porta ${portHttps} - HTTPS`);
             });
-        }
-
+        } else {
         app.listen(port, host, () => {
             console.log(`ouvindo ao endereço ${host} na porta ${port}`);
         });
+        }       
     } else {
         console.log(err);
     }
