@@ -29,6 +29,7 @@ database.connect(err => {
  * Configuração do servidor
  * Não estará no projeto
  */
+const fs = require('fs');
 const https = require('https');
 const privateKey = fs.readFileSync(
     '/etc/letsencrypt/live/deviup.com.br/privkey.pem',
