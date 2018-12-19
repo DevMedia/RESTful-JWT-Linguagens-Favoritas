@@ -7,9 +7,7 @@ Router.post('/logout', controller.logout);
 
 Router.use(validarUsuario);
 
-Router.use('/cadastrar', validarSenha);
-
-Router.post('/cadastrar', controller.cadastro);
+Router.post('/', validarSenha, controller.cadastro);
 
 Router.post('/login', controller.login);
 
