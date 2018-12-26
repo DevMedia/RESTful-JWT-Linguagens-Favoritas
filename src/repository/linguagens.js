@@ -27,7 +27,7 @@ const listarLinguagens = idUsuario => {
 
 const curtirLinguagem = (idLinguagem, idUsuario) => {
     return Linguagem.findById(idLinguagem).then(linguagem => {
-        usuarioJaCurte = linguagem.usuarios.filter(
+        const usuarioJaCurte = linguagem.usuarios.filter(
             id => String(id) === idUsuario
         );
         if (usuarioJaCurte.length) {

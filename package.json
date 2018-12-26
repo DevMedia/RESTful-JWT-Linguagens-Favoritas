@@ -4,23 +4,17 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "jest",
-        "start": "nodemon src/app.js -L"
+        "start": "node src/app.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
         "cors": "^2.8.5",
-        "crypto": "^1.0.1",
         "email-validator": "^2.0.4",
         "express": "^4.16.4",
         "jsonwebtoken": "^8.4.0",
         "mongoose": "^5.3.14",
         "password-validator": "^4.1.1"
-    },
-    "devDependencies": {
-        "jest": "^23.6.0",
-        "jest-mock-express": "^0.1.1"
     }
 }

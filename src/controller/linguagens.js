@@ -1,4 +1,3 @@
-const Linguagem = require('../model/Linguagem');
 const {
     listarLinguagens,
     curtirLinguagem,
@@ -24,8 +23,8 @@ const curtir = (req, res, next) => {
                     .status(409)
                     .json({ error: 'Usuário já curte a linguagem.' });
             }
+            return res.json({ message: 'Curtida com sucesso.' });
         })
-        .then(linguagem => res.json({ message: 'Curtida com sucesso.' }))
         .catch(err => next(err));
 };
 

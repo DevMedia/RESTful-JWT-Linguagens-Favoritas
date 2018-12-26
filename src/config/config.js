@@ -1,14 +1,13 @@
 module.exports = {
     development: {
         port: 3000,
-        host: '192.168.1.49',
+        host: '0.0.0.0',
         database: {
-            host: 'localhost',
+            host: 'mongo',
             port: 27017,
             name: 'jwt-auth'
         },
-        secret:
-            '1C3C7E1694F1E9DAD939399E87E5FFB5DF06B2327CA31B409CB329B1430F1CD3'
+        secret: '1C3C7E1694F1E9DAD939399E87E5FFB5DF06B2327CA31B409CB3'
     },
     production: {
         port: process.env.EV_PORT,

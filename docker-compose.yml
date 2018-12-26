@@ -13,7 +13,7 @@ services:
             - DB_HOST=localhost
             - DB_PORT=27018
             - DB_NAME=jwt-auth
-            - ENV=production
+            - ENV=development
             - JWT_SECRET=486f805PXd0k705c9q5EZ95yF
         volumes:
             - './src:/app/src'
