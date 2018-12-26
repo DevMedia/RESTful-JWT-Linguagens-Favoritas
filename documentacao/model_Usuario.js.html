@@ -1,0 +1,50 @@
+<h2>src/model/Usuario.js</h2>
+
+<pre><code class="lang-js">const mongoose = require('mongoose');
+const UsuarioSchema = new mongoose.Schema({
+    nome: String,
+    email: String,
+    hash: String,
+    salt: String
+});
+module.exports = mongoose.model('Usuario', UsuarioSchema);</code></pre>
+
+<h3>Visão Geral</h3>
+<p>
+    Esse módulo exporta um modelo do Mongoose para a entidade Usuario que irá
+    fazer a relação entre um objeto da nossa aplicação e um documento no banco
+    de dados.
+</p>
+
+<h3>Comentários</h3>
+
+<ul>
+    <li>
+        <span class="lf-strong">Linha 1</span>: Importamos a bilbioteca mongoose
+        a partir da qual criaremos o modelo da nossa entidade.
+        <pre><code class="lang-js">const mongoose = require('mongoose');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 3</span>: Criamos a constante
+        UsuarioListSchema que irá armazenar um novo objeto do tipo
+        mongoose.Schema. Um Schema fornece uma estrutura de campos para uma
+        coleção do MongoDB.
+        <pre><code class="lang-js">const UsuarioListSchema = new mongoose.Schema(</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 4 a 8</span>: Passamos como parâmetro de
+        Schema um objeto com a estrutura que os documentos da coleção
+        representada por esse Schema devem ter.
+        <pre><code class="lang-js">    nome: String,
+    email: String,
+    hash: String,
+    salt: String
+});</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 10</span>: Exportamos o modelo gerado pelo
+        método mongoose.model() definindo que o Schema que geramos nesse módulo
+        ficará associado a um modelo de nome Usuario.
+        <pre><code class="lang-js">module.exports = mongoose.model('Usuario', UsuarioSchema);</code></pre>
+    </li>
+</ul>

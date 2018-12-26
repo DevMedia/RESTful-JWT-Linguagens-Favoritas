@@ -1,0 +1,43 @@
+<h2>src/routes/index.js</h2>
+
+<pre><code class="lang-js">const Router = require('express').Router();
+const apiRouter = require('./api');
+
+Router.use('/api', apiRouter);
+
+module.exports = Router;
+</code></pre>
+
+<h3>Visão geral</h3>
+
+<p>
+    Esse é o módulo padrão para gerenciar as rotas da aplicação, nesse caso a
+    aplicação fornece somente uma API então ela irá direcionar para o módulo que
+    irá gerenciar as rotas do endpoint /api.
+</p>
+
+<h3>Comentários</h3>
+<ul>
+    <li>
+        <span class="lf-strong">Linha 1</span>: Armazenamos o objeto Router do
+        express dentro de uma constante. Atravéz desse objeto nós iremos definir
+        os eventos do ciclo requisição-resposta da aplicação.
+        <pre><code class="lang-js">const Router = require('express').Router();</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 2</span>: Importamos a rota que será
+        responsável por gerenciar os endpoints da API.
+        <pre><code class="lang-js">const apiRouter = require('./api');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 4</span>: Utilizamos o método Router.use()
+        para associar todas as requisições, independente do verbo HTTP,
+        direcionadas ao endpoint /api com seu devido módulo de rotas.
+        <pre><code class="lang-js">Router.use('/api', apiRouter);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 6</span>: Exportamos o objeto Router para
+        que o módulo de rotas possa ser usado pela aplicação.
+        <pre><code class="lang-js">module.exports = Router;</code></pre>
+    </li>
+</ul>

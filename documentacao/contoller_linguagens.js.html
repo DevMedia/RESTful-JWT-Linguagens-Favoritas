@@ -1,0 +1,204 @@
+<h2>src/controller/linguagens.js</h2>
+
+<pre><code class="lang-js">const {
+    listarLinguagens,
+    curtirLinguagem,
+    detalhesLinguagem
+} = require('../repository/linguagens');
+
+const listar = (req, res, next) => {
+    const idUsuario = res.locals.payload.usuario.id;
+
+    return listarLinguagens(idUsuario)
+        .then(linguagens => res.json(linguagens))
+        .catch(err => next(err));
+};
+
+const curtir = (req, res, next) => {
+    const idLinguagem = req.params.id;
+    const idUsuario = res.locals.payload.usuario.id;
+
+    return curtirLinguagem(idLinguagem, idUsuario)
+        .then(disponivel => {
+            if (!disponivel) {
+                return res
+                    .status(409)
+                    .json({ error: 'Usuário já curte a linguagem.' });
+            }
+            return res.json({ message: 'Curtida com sucesso.' });
+        })
+        .catch(err => next(err));
+};
+
+const detalhes = (req, res, next) => {
+    return detalhesLinguagem(req.params.id)
+        .then(linguagem => res.json({ linguagem }))
+        .catch(err => next(err));
+};
+
+module.exports = { listar, curtir, detalhes };    
+</code></pre>
+
+<h3>Visão Geral</h3>
+
+<p>
+    Este módulo será responsável por tratar as requisições enviadas pelo cliente
+    e enviar-lhes respostas adequadas, utilizando das abstrações de comunidações
+    com as entidades, os repositórios, para buscar os dados solicitados pelas
+    requisições dos clientes.
+</p>
+
+<h3>Comentários</h3>
+
+<ul>
+    <li>
+        <span class="lf-strong">Linhas 1 a 5</span>: Importamos as funções dos
+        repositórios que serão usadas nesse módulo: listarLinguagens,
+        curtirLinguagem e detalhesLinguagem.
+        <pre><code class="lang-js">const {
+    listarLinguagens,
+    curtirLinguagem,
+    detalhesLinguagem
+} = require('../repository/linguagens');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 7 e 8</span>: Criamos a função listar que
+        irá enviar como resposta a lista de linguagens cadastradas no banco de
+        dados e armazenamos o id do usuário autenticado na constante idUsuario.
+        <pre><code class="lang-js">const listar = (req, res, next) => {
+    const idUsuario = res.locals.payload.usuario.id;</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linahs 10 e 11</span>: Retornamos a execução da
+        função listarLinguagens passando idUsuario como parâmetro, como esta
+        função retorna uma Promise iremos executar seu then() passando-lhe como
+        parâmetro uma função callback que receberá a lista de linguagens e a
+        retornará como resposta.
+        <pre><code class="lang-js">return listarLinguagens(idUsuario)
+    .then(linguagens => res.json(linguagens))</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 12</span>: Caso ocorra algum erro durante
+        a execução da Promise catch() será executado, passamos em seu parâmetro
+        uma função callback que receberá o erro em seu parâmetro, iremos então
+        passar esse erro na execução de next() para que o erro seja direcionado
+        ao middleware de tratamento de erros.
+        <pre><code class="lang-js">.catch(err => next(err));</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 15 a 17</span>: Criamos a função curtir
+        que deverá verificar se o usuário já curte a linguagem e curtí-la caso
+        já não esteja. Armazenamos ambos os ids da linguagem e do usuário nas
+        constantes idLinguagem e idUsuario respectivamente.
+        <pre><code class="lang-js">const curtir = (req, res, next) => {
+    const idLinguagem = req.params.id;
+    const idUsuario = res.locals.payload.usuario.id;</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 19 e 20</span>: Retornamos a execução da
+        função curtirLinguagem() passando em seus parâmetros idLinguagem e
+        idUsuario, como seu retorno é uma Promise executamos seu then()
+        passando-lhe como parâmetro uma callback que irá receber um booleano
+        informando se a linguagem estava disponível para ser curtida.
+        <pre><code class="lang-js">return curtirLinguagem(idLinguagem, idUsuario)
+    .then(disponivel => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 21 a 25</span>: Criamos uma estrutura
+        condicional para verificar se a linguagem estava disponível para ser
+        curtida no momento da execução, caso não estivesse retornaremos uma
+        resposta com status 409 (conflito) dizendo que o usuário já curte a
+        linguagem.
+        <pre><code class="lang-js">if (!disponivel) {
+    return res
+        .status(409)
+        .json({ error: 'Usuário já curte a linguagem.' });
+}</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 26</span>: Caso tudo tenha ocorrido bem
+        então retornaremos uma resposta com a mensagem de que a linguagem foi
+        curtida com sucesso.
+        <pre><code class="lang-js">return res.json({ message: 'Curtida com sucesso.' });</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 28</span>: Caso ocorra algum erro durante
+        a execução da Promise catch() será executado, passamos em seu parâmetro
+        uma função callback que receberá o erro em seu parâmetro, iremos então
+        passar esse erro na execução de next() para que o erro seja direcionado
+        ao middleware de tratamento de erros.
+        <pre><code class="lang-js">.catch(err => next(err));</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 31</span>: Criamos a função detalhes que
+        será responsável por enviar uma resposta com os dados de uma linguagem
+        específica ao cliente.
+        <pre><code class="lang-js">const detalhes = (req, res, next) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 37</span>: Exportamos as funções listar,
+        curtir e detalhes para que sejam utilizadas por outras partes da
+        aplicação.
+        <pre><code class="lang-js">module.exports = { listar, curtir, detalhes };</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+</ul>

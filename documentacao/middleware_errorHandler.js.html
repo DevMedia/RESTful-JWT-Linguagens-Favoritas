@@ -1,0 +1,116 @@
+<h2>scr/middleware/errorHandler.js</h2>
+
+<pre><code class="lang-js">const environment = process.env.ENV || 'development';
+
+const internalServer = (err, req, res, next) => {
+    console.log(err);
+    if (environment === 'production') {
+        return res.status(500).send();
+    }
+    return res.status(500).json({ error: err.message });
+};
+
+const notFound = (req, res, next) => {
+    if (environment === 'production') {
+        return res.status(404).send();
+    }
+    return res.status(404).json({ error: 'não há nada aqui' });
+};
+module.exports = { internalServer, notFound };
+</code></pre>
+
+<h3>Visão Geral</h3>
+<p>
+    Esse módulo tem a responsabilidade de prover middlewares para tratamento de
+    erro interno de servidor (status 500) e para recurso não encontrado (status
+    404)
+</p>
+
+<h3>Comentários</h3>
+<ul>
+    <li>
+        <span class="lf-strong">Linha 1</span>: Armazenamos na constante
+        environment o valor da variável de ambiente ENV para indicar em qual
+        ambiente a aplicação está. Caso não exista o ambiente será o de
+        desenvolvimento 'development'.
+        <pre><code class="lang-js">const environment = process.env.ENV || 'development';</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 3</span>: Criamos a função para tratamento
+        de erro interno do servidor, esse middleware se destaca dos demais por
+        receber 4 parâmetros ao invés de três em que o que não está incluso nos
+        outros middlewares é um objeto de erro que chegará até esse middleware
+        sempre que outro middleware executar a função next() passando um erro em
+        seu parâmetro.
+        <pre><code class="lang-js">const internalServer = (err, req, res, next) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 4</span>: Geramos um log no console com o
+        erro para que este possa ser investigado posteriormente.
+        <pre><code class="lang-js">console.log(err);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 5 a 9</span>: Criamos uma estrutura
+        condicional para verificar se o ambiente em que a aplicação está rodando
+        é o de produção, caso seja, a função retornará uma resposta com status
+        500 sem corpo, caso não seja o ambiente de produção retornará uma
+        resposta com status 500 com a mensagem do erro que foi gerado no corpo
+        da resposta.
+        <pre><code class="lang-js">    if (environment === 'production') {
+        return res.status(500).send();
+    }
+    return res.status(500).json({ error: err.message });
+};</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 11</span>: Criamos a função de middleware
+        que será responsável por tratar os erros de recurso não encontrado
+        (status 404). Esse middleware precisa ser declarado como último do ciclo
+        requisição-resposta, assim toda requisição que não for tratada por outro
+        middleware será tratada por este.
+        <pre><code class="lang-js">const notFound = (req, res, next) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 12 a 16</span>: Criamos uma estrutura
+        condicional para verificar se o ambiente em que a aplicação está rodando
+        é o de produção, caso seja, a função retornará uma resposta com status
+        404 sem corpo, caso não seja o ambiente de produção retornará uma
+        resposta com status 404 com uma mensagem informando que esse caminho não
+        possuim nenhuma funcionalidade.
+        <pre><code class="lang-js">    if (environment === 'production') {
+        return res.status(404).send();
+    }
+    return res.status(404).json({ error: 'não há nada aqui' });
+};</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 17</span>: Exportamos as funções
+        internalServer e notFound para que possam ser usadas pelo resto da
+        aplicação.
+        <pre><code class="lang-js">module.exports = { internalServer, notFound };</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+</ul>

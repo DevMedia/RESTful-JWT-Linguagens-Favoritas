@@ -1,0 +1,239 @@
+<h2>src/repository/linguagens.js</h2>
+
+<pre><code class="lang-js">const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
+const Linguagem = require('../model/Linguagem');
+
+const listarLinguagens = idUsuario => {
+    return Linguagem.aggregate([
+        {
+            $project: {
+                nome: 1,
+                urlImagem: 1,
+                numeroUsuarios: { $size: '$usuarios' },
+                usuarioCurte: {
+                    $cond: {
+                        if: {
+                            $in: [ObjectId(idUsuario), '$usuarios']
+                        },
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        },
+        { $sort: { nome: 1 } }
+    ]);
+};
+
+const curtirLinguagem = (idLinguagem, idUsuario) => {
+    return Linguagem.findById(idLinguagem).then(linguagem => {
+        const usuarioJaCurte = linguagem.usuarios.filter(
+            id => String(id) === idUsuario
+        );
+        if (usuarioJaCurte.length) {
+            return false;
+        }
+
+        return Linguagem.updateOne(
+            { _id: ObjectId(idLinguagem) },
+            { $push: { usuarios: idUsuario } }
+        );
+    });
+};
+
+const detalhesLinguagem = idLinguagem => {
+    return Linguagem.aggregate([
+        {
+            $match: { _id: ObjectId(idLinguagem) }
+        },
+        {
+            $project: {
+                nome: 1,
+                urlImagem: 1,
+                numeroUsuarios: { $size: '$usuarios' },
+                paradigmas: 1,
+                criadoPor: 1,
+                surgidoEm: 1,
+                ultimaVersao: 1
+            }
+        }
+    ]);
+};
+
+module.exports = { listarLinguagens, curtirLinguagem, detalhesLinguagem };
+</code></pre>
+
+<h3>Visão Geral</h3>
+
+<p>
+    Este módulo é responsável por fornecer uma camada de abstração da entidade
+    de linguagens para a aplicação. Esta entidade tem como propósito listar as
+    linguagens de programação que estão cadastradas no banco, exibir os detalhes
+    de uma dada linguagem quando passado seu id e permitir que um usuário curta
+    uma determinada linguagem.
+</p>
+
+<h3>Comentários</h3>
+
+<ul>
+    <li>
+        <span class="lf-strong">Linhas 1 a 4</span>: Importamos a biblioteca
+        mongoose e salvamos seu objeto na constante de mesmo nome, fazemos isso
+        para importar o tipo de dado ObjectId que será necessário usar durante
+        as queries com o banco. Por fim importamos o modelo Linguagem através do
+        qual poderemos realizar ações de escrita e leitura no banco de dados.
+        <pre><code class="lang-js">const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
+const Linguagem = require('../model/Linguagem');
+</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 6</span>: Criamos a função
+        listarLinguagens que irá receber o id do usuário autenticado e retornar
+        uma lista com as linguagens cadastradas no banco informando seus nomes,
+        um link com a logo da linguagem, o número de usuários que curtem cada
+        linguagem e se o usuário autenticado a curte.
+        <pre><code class="lang-js">const listarLinguagens = idUsuario => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 7</span>: O método Linguagem.aggregate
+        corresponde a uma função do MonogDB, que nos permite criar buscas
+        personalizadas durante a query, aggregate recebe como parâmetro uma
+        lista de objetos os quais iremos informar as especificações da query.
+        <pre><code class="lang-js">return Linguagem.aggregate([</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 8 a 23</span>: O primeiro objeto que
+        passamos em aggregate tem como atributo a declaração $project que nos
+        permite criar campos customizados durante a query. Informamos na query
+        que a busca por linguagens deve retornar os campos nome e urlImagem que
+        são do documento e dois campos criados dinamicamente: numeroUsuarios irá
+        retornar a quantidade de elementos contidos no array usuarios de cada
+        linguagem; usuarioCurte realizará uma estrutura condicional, se o id do
+        usuário autenticado estiver no array do campo usuarios será true, se não
+        estiver será false.
+
+        <pre><code class="lang-js">{
+    $project: {
+        nome: 1,
+        urlImagem: 1,
+        numeroUsuarios: { $size: '$usuarios' },
+        usuarioCurte: {
+            $cond: {
+                if: {
+                    $in: [ObjectId(idUsuario), '$usuarios']
+                },
+                then: true,
+                else: false
+            }
+        }
+    }
+},</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 24</span>: O segundo objeto que passamos
+        em aggregate possui a declaração $sort que irá definir uma ordenação dos
+        documentos recuperados em aggregate, nesse caso pelo campo nome.
+        <pre><code class="lang-js">{ $sort: { nome: 1 } }</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 28</span>: Criamos a função
+        curtirLinguagem que irá receber o id da linguagem e o id do usuário
+        autenticado e irá retornar se a linguagem foi curtina ou não.
+        <pre><code class="lang-js">const curtirLinguagem = (idLinguagem, idUsuario) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 29 a 32</span>: A primeira coisa que
+        fazemos em curtirLinguagem é vereficiar se o usuário já curte a
+        linguagem, então iremos retornaro método Linguagem.findById() passando o
+        id da linguagem em seu parâmetro, como esse método retorna uma promise
+        executaremos seu then(). Passamos no parâmetro de then uma função
+        callback que irá receber a linguagem encontrada por findById em seu
+        parâmetro, em seguida iremos realizar um filter pelo campo usuário da
+        linguagem encontrada que irá armazenar na constante usuarioJaCurte um
+        array contendo o id do usuário se ele for encontrado no campo
+        linguagem.usuarios, o que quer dizer que o usuário autenticado já curte
+        a linguagem.
+
+        <pre><code class="lang-js">return Linguagem.findById(idLinguagem).then(linguagem => {
+    const usuarioJaCurte = linguagem.usuarios.filter(
+        id => String(id) === idUsuario
+    );</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 33 a 35</span>: Verificamos se o usuário
+        autenticado já curte a linguagem encontrada, caso sim a Promise irá
+        retornar false.
+        <pre><code class="lang-js">if (usuarioJaCurte.length) {
+    return false;
+}</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 37 a 42</span>: Por fim, se o usuário
+        autenticado não curtir a linguagem, iremos retornar o método
+        Linguagem.updateOne para alterar um documento, indicamos que queremos
+        alterar o documento cujo campo _id seja igual ao id da linguagem
+        recebida no parâmetro e informamos que a alteração que queremos realizar
+        é um $push, que acescenta um item em um array, nesse caso
+        acrescentaremos o id do usuário autenticado ao campo usuarios da
+        linguagem.
+
+        <pre><code class="lang-js">        return Linguagem.updateOne(
+            { _id: ObjectId(idLinguagem) },
+            { $push: { usuarios: idUsuario } }
+        );
+    });
+};</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 44</span>: Criamos a função
+        detalhesLinguagem que irá receber o id da linguagem escolhida e irá
+        retornar seus detalhes.
+        <pre><code class="lang-js">const detalhesLinguagem = idLinguagem => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 45</span>: O método Linguagem.aggregate
+        corresponde a uma função do MonogDB, que nos permite criar buscas
+        personalizadas durante a query, aggregate recebe como parâmetro uma
+        lista de objetos os quais iremos informar as especificações da query.
+        <pre><code class="lang-js">return Linguagem.aggregate([</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 46 a 48</span>: O primeiro objeto que
+        passamos em agreggate possui a declaração $match para definir que os
+        itens buscados devem ter o campo _id igual ao valor de idLinguagem
+        convertido para o tipo ObjectId.
+        <pre><code class="lang-js">{
+            $match: { _id: ObjectId(idLinguagem) }
+        },</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 49 a 59</span>: O segundo objeto que
+        passamos em aggregate tem como atributo a declaração $project que nos
+        permite criar campos customizados durante a query. Definimos que os
+        documentos recuperados pela busca retornar os campos nome, urlImagem,
+        numeroUsuarios, paradigmas, criadoPor, surgidoEm e ultimaVersao.
+        numeroUsuarios é um campo gerado dinamicamente e irá retornar a
+        quantidade de elementos contidos no array usuarios da linguagem
+        <pre><code class="lang-js">{
+            $project: {
+                nome: 1,
+                urlImagem: 1,
+                numeroUsuarios: { $size: '$usuarios' },
+                paradigmas: 1,
+                criadoPor: 1,
+                surgidoEm: 1,
+                ultimaVersao: 1
+            }
+        }</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 63</span>: Por fim exportamos as funções
+        criadas nesse módulo para que possams ser acessadas por outras partes da
+        aplicação
+        <pre><code class="lang-js">module.exports = { listarLinguagens, curtirLinguagem, detalhesLinguagem };</code></pre>
+    </li>
+</ul>

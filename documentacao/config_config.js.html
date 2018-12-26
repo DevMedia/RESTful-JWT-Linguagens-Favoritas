@@ -1,0 +1,99 @@
+<h2>scr/config/config.js</h2>
+<pre><code class="lang-js">module.exports = {
+    development: {
+        port: 3000,
+        host: '0.0.0.0',
+        database: {
+            host: 'mongo',
+            port: 27017,
+            name: 'jwt-auth'
+        },
+        secret: '1C3C7E1694F1E9DAD939399E87E5FFB5DF06B2327CA31B409CB3'
+    },
+    production: {
+        port: process.env.EV_PORT,
+        host: process.env.EV_HOST,
+        database: {
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            name: process.env.DB_NAME
+        },
+        secret: process.env.JWT_SECRET
+    }
+};
+</code></pre>
+
+<h3>Visão Geral</h3>
+<p>
+    Esse módulo possui os dados de configuração que serão utilizados por certas
+    partes da aplicação, por exemplo dados de conexão com o banco de dados. O
+    módulo trata-se de exportar um objeto que tem dois atributos principais que
+    exportam as configurações específicas para o ambiente de desenvolvimento e
+    produção.
+</p>
+<p>
+    Os valores do atribtudo de desenvolvimento (development) podem variar de
+    acordo com as configurações de cada computador podendo então ser alterados
+    de acordo com as suas necessidades. Os valores do atributo de produção
+    (production) são recuperados das variáveis de ambiente do servidor de
+    produção e não devem ser alterados a não ser que o servidor utilize
+    variáveis homônimas para outros fins. quando puser a aplicação em produção
+    configure os valores nas variáveis de ambiente para que se adequem com as
+    necessidades da aplicação.
+</p>
+
+<h3>Comentários</h3>
+
+<ul>
+    <li>
+        <span class="lf-strong">Linhas 2 e 13</span>: Classificam quais
+        atributos são de desenvolvimento e quais são de produção
+        respectivamente.
+        <pre><code class="lang-js">development: {</code></pre>
+        <pre><code class="lang-js">production: {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 3 e 14</span>: Define o valor da porta
+        que o Node.js irá escutar quando em execução.
+        <pre><code class="lang-js">port: 3000,</code></pre>
+        <pre><code class="lang-js">port: process.env.EV_PORT,</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 4 e 15</span>: Define o endereço do host
+        em que o Node.js irá servir a aplicação.
+        <pre><code class="lang-js">host: '0.0.0.0',</code></pre>
+        <pre><code class="lang-js">host: process.env.EV_HOST,</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 5 a 9 e Linhas 16 a 20</span>: Define os
+        dados para coneção com o banco de dados, estes são: endereço, porta e
+        nome do banco no MongoDB.
+        <pre><code class="lang-js">database: {
+    host: 'mongo',
+    port: 27017,
+    name: 'jwt-auth'
+},
+database: {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    name: process.env.DB_NAME
+},</code></pre>
+        <pre><code class="lang-js">database: {
+    host: 'mongo',
+    port: 27017,
+    name: 'jwt-auth'
+},
+database: {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    name: process.env.DB_NAME
+},</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 10 e 11 e Linha 21 </span>: Define o
+        segredo usado para a criptografia do token JWT. Pode ser qualquer
+        string.
+        <pre><code class="lang-js">secret: '1C3C7E1694F1E9DAD939399E87E5FFB5DF06B2327CA31B409CB3'</code></pre>
+        <pre><code class="lang-js">secret: process.env.JWT_SECRET</code></pre>
+    </li>
+</ul>

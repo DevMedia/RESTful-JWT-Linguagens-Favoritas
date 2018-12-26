@@ -1,0 +1,155 @@
+<h2>src/app.js</h2>
+
+<pre><code class="lang-js">const express = require('express');
+const cors = require('cors');
+
+const database = require('./database/database');
+const routes = require('./routes');
+const { internalServer, notFound } = require('./middleware/errorHandler');
+const environment = process.env.ENV || 'development';
+const { port, host } = require('./config/config')[environment];
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+app.use(routes);
+app.use(internalServer);
+app.use(notFound);
+
+database.connect(err => {
+    if (!err) {
+        app.listen(port, host, () => {
+            console.log(`ouvindo ao endereço ${host} na porta ${port}`);
+        });
+    } else {
+        console.log(err);
+    }
+});
+
+module.exports = app;
+</code></pre>
+
+<h3>Visão Geral</h3>
+<p>
+    Esse módulo é responsável por iniciar e serivir nossa aplicação na web, nele
+    faremos a conexão com o banco de dados, configurações de requisição e
+    tratamento de erros.
+</p>
+
+<h3>Comentários</h3>
+
+<ul>
+    <li>
+        <span class="lf-strong">Linha 1</span>: Importamos o framework expressjs
+        que fornece os recursos para servir a aplicação.
+        <pre><code class="lang-js">const express = require('express');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 2</span>: Importamos a biblioteca cors que
+        possui as configurações para que a API seja acessada por Apps mobile e
+        Single Page Aplications de origens remotas.
+        <pre><code class="lang-js">const cors = require('cors');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 4</span>: Importamos o objeto responsável
+        por realizar a conexão com o banco de dados.
+        <pre><code class="lang-js">const database = require('./database/database');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 5</span>: Importamos o objeto responsável
+        pelas rotas da nossa aplicação.
+        <pre><code class="lang-js">const routes = require('./routes');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 6</span>: Importamos as funções que serão
+        responsáveis por tratar erros internos de servidor (status 500) e erro
+        de recurso não encontrado (staus 404).
+        <pre><code class="lang-js">const { internalServer, notFound } = require('./middleware/errorHandler');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 7</span>: É informado à aplicação se
+        informa se está em ambiente de produção ou desenvolvimento. A constante
+        environment irá receber o valor da variável de ambiente ENV caso existe,
+        ou "development" caso não exista.
+        <pre><code class="lang-js">const environment = process.env.ENV || 'development';</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 8</span>: Nessa linha importamos as
+        constantes que possuem o valor da porta que a aplicação deve ouvir e do
+        endereço em que a aplicação será servida. Importamos essas constantes do
+        atributo que possui o índice igual ao valor de environment.
+        <pre><code class="lang-js">const { port, host } = require('./config/config')[environment];</code></pre>
+    </li>
+
+    <li>
+        <span class="lf-strong">Linha 10</span>: Aqui criamos uma aplicação
+        Express a partir de uma chamada a função express(), que importamos do
+        módulo express
+        <pre><code class="lang-js">const app = express();</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 12</span>: Para conseguirmos receber dados
+        em formato JSON precisamos de um middleware que faça a conversão de
+        texto para esse formato de dado. Aqui utilizamos a solução nativa do
+        Express para essa conversão, obtida a partir de uma chamada para
+        express.json()
+        <pre><code class="lang-js">app.use(express.json());</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 13</span>: Quando criamos uma API ela
+        possui certas restrições para ser acessadas, então aplicações que tenham
+        origens diversas, como é o caso de aplicações mobile, não conseguem
+        realizar requisições aos endpoints da aplicação. A biblioteca externa
+        <span class="lf-badge">cors</span> retorna um middleware para permitir
+        esses tipos de acesso.
+        <pre><code class="lang-js">app.use(cors());</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 14</span>: Acrescentamos nossas rotas à
+        aplicação, dessa forma todos os endpoints da API serão definidos e
+        gerenciados por essas rotas.
+        <pre><code class="lang-js">app.use(routes);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 15</span>: Incluímos no ciclo
+        requisição-resposta de nossa aplicação o middleware para tratamento de
+        erros internos de servidor (status 500), esse middleware deve ser
+        adicionado à aplicação após a declaração das rotas para que as mesmas
+        tenha acesso a este.
+        <pre><code class="lang-js">app.use(internalServer);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 16</span>: Acrescentamos ao ciclo
+        requisição-resposta da aplicação o middleware para tratamento de recurso
+        não encontrado (status 404), esse middleware deve ser o último a ser
+        acrescentado no ciclo requisição-resposta para que todo acesso a uma
+        rota não tratada caia nele.
+        <pre><code class="lang-js">app.use(notFound);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 18 a 26</span>: Executamos o método
+        connect de database para conectar a aplicação ao banco de dados. Esta
+        connect é uma função de alta ordem recebe como parâmetro uma função
+        callback e executará essa callback quando finalizar o processo de
+        conexão, se houver um erro durante o processo um objeto com esse erro
+        será passado ao parâmetro da callback. Na callback iremos verificar se
+        um erro ocorreu, caso não tenha ocorrido iremos servir a aplicação no
+        endereço e ouvindo a porta importados na linha 8 e enviamos uma mensagem
+        no console. Caso um erro tenha ocorrido a aplicação não será servida e a
+        mensagem de erro será enviada no console da aplicação;
+        <pre><code class="lang-js">database.connect(err => {
+    if (!err) {
+        app.listen(port, host, () => {
+            console.log(`ouvindo ao endereço ${host} na porta ${port}`);
+        });
+    } else {
+        console.log(err);
+    }
+});</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 28</span>: Por fim exportamos o objeto app
+        para que possa ser usado em outros pontos da aplicação
+    </li>
+</ul>

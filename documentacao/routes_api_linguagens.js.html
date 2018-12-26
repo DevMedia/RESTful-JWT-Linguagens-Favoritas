@@ -1,0 +1,85 @@
+<h2>src/routes/api/linguagens.js</h2>
+
+<pre><code class="lang-js">const Router = require('express').Router();
+
+const { autenticarRequisicao } = require('../../middleware/auth');
+const controller = require('../../controller/linguagens');
+
+Router.use(autenticarRequisicao);
+
+Router.get('/', controller.listar);
+
+Router.get('/:id', controller.detalhes);
+
+Router.put('/curtir/:id', controller.curtir);
+
+module.exports = Router;
+</code></pre>
+
+<h3>Visão Geral</h3>
+
+<p>
+    Esse módulo define quais são os endpoints quue irão tratar o recurso
+    linguagens, a partir dele o cliente terá uma interface para listar as
+    linguagens de programação, ver os detalhes de uma dada linguagem e curtir
+    uma linguagem.
+</p>
+<h3>Comentários</h3>
+<ul>
+    <li>
+        <span class="lf-strong">Linha 1</span>: Criamos o objeto Router que irá
+        definer os eventos para cada endpoint.
+        <pre><code class="lang-js">const Router = require('express').Router();</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 3 e 4</span>: Importamos o middleware de
+        autenticação da requisição e o objeto controller que irá definir quais
+        serão as respostas para determinados endpoints.
+        <pre><code class="lang-js">const { autenticarRequisicao } = require('../../middleware/auth');
+const controller = require('../../controller/linguagens');
+</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 6</span>: Adicionamos ao ciclo
+        requisição-resposta da API o middleware de autenticação de requisição,
+        este irá verificar se há um usuário autenticado por trás de cada
+        requisição enviada às rotas do recurso linguagens, caso haja dará
+        procedimento ao ciclo, caso não irá identificar que a requisição não tem
+        acesso ao recurso e irá interromper o ciclo requisição-resposta.
+        <pre><code class="lang-js">Router.use(autenticarRequisicao);
+            </code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 8</span>: Define que o endpoint
+        /api/linguagens, ao receber uma requisição de verbo GET, irá executar o
+        método controller.listar(), que irá retornar uma lista com as linguagens
+        de programação cadastradas no banco de dados.
+        <pre><code class="lang-js">Router.get('/', controller.listar);
+            </code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 10</span>: Define que o endpoint
+        /api/linguagens/:id, ao receber uma requisição de verbo GET, irá
+        executar o método controller.detalhes(), este irá retornar os detalhes
+        da linguagem cujo código interno de identificação seja igual ao valor
+        passado na URL em :id pelo cliente.
+        <pre><code class="lang-js">Router.get('/:id', controller.detalhes);
+            </code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 12</span>: Define que o endpoint
+        /api/linguagens/curtir/:id, ao receber uma requisição de verbo PUT, irá
+        executar o método controller.curtir(), este irá alterar o registro da
+        linguagem, cujo código interno de identificação seja igual ao valor
+        passado na URL em :id, para informar que essa linguagem foi curtia pelo
+        usuário autenticado da requisição
+        <pre><code class="lang-js">Router.put('/curtir/:id', controller.curtir);
+            </code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 14</span>: Exportamos o objeto Router para
+        que o módulo de rotas possa ser usado pela aplicação.
+        <pre><code class="lang-js">module.exports = Router;
+            </code></pre>
+    </li>
+</ul>

@@ -1,0 +1,265 @@
+<h2>src/service/auth.js</h2>
+
+<pre><code class="lang-js">const { sign, verify } = require('jsonwebtoken');
+const { randomBytes, pbkdf2Sync } = require('crypto');
+
+const environment = process.env.ENV || 'development';
+const { secret } = require('../config/config')[environment];
+
+const gerarJWT = (id, email, nome) => {
+    const token = sign(
+        {
+            usuario: {
+                id,
+                email,
+                nome
+            }
+        },
+        secret
+    );
+    return { token };
+};
+
+const gerarCredenciais = senha => {
+    const salt = randomBytes(16).toString('hex');
+    const hash = pbkdf2Sync(senha, salt, 1000, 512, 'sha512').toString('hex');
+
+    return { salt, hash };
+};
+
+const senhaConfere = (senha, cadastrado) => {
+    return (
+        cadastrado.hash ===
+        pbkdf2Sync(senha, cadastrado.salt, 1000, 512, 'sha512').toString('hex')
+    );
+};
+
+const verificarToken = (token, callback) => {
+    return verify(token, secret, callback);
+};
+
+module.exports = { gerarCredenciais, gerarJWT, senhaConfere, verificarToken };
+</code></pre>
+
+<h3>Visão Geral</h3>
+
+<p>
+    Este é o módulo de serviço de autenticação da nossa aplicação, nele está
+    contida toda a lógica necessária para autenticar os tokens JWT da nossa API.
+</p>
+
+<h3>Comentários</h3>
+<ul>
+    <li>
+        <span class="lf-strong">Linha 1</span>: Importamos as funções sign e
+        verity da biblioteca jsonwebtoken para gerar e assinar tokens JWT
+        <pre><code class="lang-js">const { sign, verify } = require('jsonwebtoken');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 2</span>: Importamos as funções
+        randomBytes e pbkdf2Sync da bibilioteca crypto que irão gerar o salt e a
+        hash para criptografar as senhas fornecidas pelo usuário.
+        <pre><code class="lang-js">const { randomBytes, pbkdf2Sync } = require('crypto');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 4</span>: É informado à aplicação se
+        informa se está em ambiente de produção ou desenvolvimento. A constante
+        environment irá receber o valor da variável de ambiente ENV caso existe,
+        ou "development" caso não exista.
+        <pre><code class="lang-js">const environment = process.env.ENV || 'development';</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 5</span>: Nessa linha importamos as
+        constantes que possuem o valor do secret usado para gerar e verificar
+        tokens JWT na nossa aplicação. Importamos essa constante do atributo que
+        possui o índice igual ao valor de environment.
+        <pre><code class="lang-js">const { secret } = require('../config/config')[environment];</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 7</span>: Criamos a função gerarJWT que
+        recebe como parâmetros o id do usuário, seu e-mail e seu nome e
+        retornará o token JWT autenticado.
+        <pre><code class="lang-js">const gerarJWT = (id, email, nome) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 8</span>: Executamos a função sign da
+        biblioteca jsonwebtoken e armazenamos seu rezulado em uma constante de
+        nome token.
+        <pre><code class="lang-js">const token = sign(</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 9 a 15</span>: Passamos como primeiro
+        parâmetro da função sign o objeto que será gerado como payload do token,
+        atribuimos a esse payload o atributo usuário que terá o id, email e nome
+        que nos foi fornecido.
+        <pre><code class="lang-js">{
+    usuario: {
+        id,
+        email,
+        nome
+    }
+},</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 16</span>: O segundo parâmetro de sign é a
+        string com o segredo da nossa aplicação que fará parte da criptografia
+        do token sendo gerado.
+        <pre><code class="lang-js">secret</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 18</span>: Por fim retornamos o token que
+        geramos dentro de um objeto para que seja enviado ao cliente como
+        resposta.
+        <pre><code class="lang-js">return { token };</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 21</span>: Criamos a função
+        gerarCredenciais que irá receber a senha fornecida pelo cliente na
+        requisição e retornará um objeto com um salt e um hash que podem ser
+        salvos no banco de dados.
+        <pre><code class="lang-js">const gerarCredenciais = senha => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 22</span>: Executamos a função randomBytes
+        passando como parâmetro o número 16 indicando que queremos um salt com
+        16 bytes de tamanho, em seguida executamos toString('hex') para salvar
+        os bytes gerados como uma string hexadecimal. Salvamos esse salt em uma
+        constante.
+        <pre><code class="lang-js">const salt = randomBytes(16).toString('hex');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 23</span>: Executamos a função pbkdf2Sync
+        para a criação da hash, passamos em seu parâmetro a senha que qeremos
+        criptografar, o salt com o qual a senha será mesclada, a quantidade de
+        iterações que serão feitas, o tamanho em bytes da chave que será gerada,
+        por fim executamos toString('hex') para salvar a hash como uma string
+        exadecimal e a armazenamos em uma constante.
+        <pre><code class="lang-js">const hash = pbkdf2Sync(senha, salt, 1000, 512, 'sha512').toString('hex');</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 25</span>: Retornamos um objeto com os
+        valores de salt e hash.
+        <pre><code class="lang-js">return { salt, hash };</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 28</span>: Criamos a função senhaConfere
+        que recebe como parâmetros a senha enviada pelo cliente durante a
+        requisição de login e um objeto referente ao usuário cadastrado, a
+        função irá verificar se a hash que está salva no banco confere com a
+        hash gerada a partir da senha enviada pelo cliente.
+        <pre><code class="lang-js">const senhaConfere = (senha, cadastrado) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linhas 29 a 32</span>: Comparamos a hash do
+        usuário cadastrado com a hash gerada a partir da senha fornecida pelo
+        cliente e retornamos o resultado desta comeparação: true se for idêntica
+        e false se não for.
+        <pre><code class="lang-js">return (
+    cadastrado.hash ===
+    pbkdf2Sync(senha, cadastrado.salt, 1000, 512, 'sha512').toString('hex')
+);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 35</span>: Criamos a função verificarToken
+        que irá receber como parâmetros a token fornecida pelo cliente durante a
+        requisição e uma função callback.
+        <pre><code class="lang-js">const verificarToken = (token, callback) => {</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 36</span>: Executa a função verify
+        passando-lhe como parâmetros o token fornecido pelo cliente, o segredo
+        da aplicação e a função callback que será executada após a verificação
+        do token.
+        <pre><code class="lang-js">return verify(token, secret, callback);</code></pre>
+    </li>
+    <li>
+        <span class="lf-strong">Linha 39</span>: Exportamos todas as funções do
+        módulo para que possam ser usadas por outras partes da aplicação
+        <pre><code class="lang-js">module.exports = { gerarCredenciais, gerarJWT, senhaConfere, verificarToken };
+            </code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+    <li>
+        <span class="lf-strong"></span>
+        <pre><code class="lang-js"></code></pre>
+    </li>
+</ul>
