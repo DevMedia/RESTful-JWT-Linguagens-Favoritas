@@ -1,5 +1,21 @@
 <h2>src/routes/api/usuarios.js</h2>
 
+<pre><code class="lang-js">const Router = require('express').Router();
+
+const { validarUsuario, validarSenha } = require('../../middleware/validacao');
+const controller = require('../../controller/usuarios');
+
+Router.post('/logout', controller.logout);
+
+Router.use(validarUsuario);
+
+Router.post('/', validarSenha, controller.cadastro);
+
+Router.post('/login', controller.login);
+
+module.exports = Router;
+</code></pre>
+
 <h3>Visão Geral</h3>
 
 <p>
