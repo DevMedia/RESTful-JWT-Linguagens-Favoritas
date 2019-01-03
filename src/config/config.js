@@ -1,9 +1,9 @@
 module.exports = {
     development: {
         port: 3000,
-        host: '0.0.0.0',
+        host: 'localhost',
         database: {
-            host: 'mongo',
+            host: 'localhost',
             port: 27017,
             name: 'jwt-auth'
         },
