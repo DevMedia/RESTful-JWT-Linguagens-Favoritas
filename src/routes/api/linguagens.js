@@ -9,6 +9,6 @@ Router.get('/', controller.listar);
 
 Router.get('/:id', controller.detalhes);
 
-Router.put('/curtir/:id', controller.curtir);
+Router.post('/curtir/:id', controller.curtir);
 
 module.exports = Router;
