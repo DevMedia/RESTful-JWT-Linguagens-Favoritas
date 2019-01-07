@@ -6,7 +6,7 @@ const listarToken = token => {
             const listedToken = new BlackList({ token });
             listedToken.save();
         }
-        return true;
+        return { token };
     });
 };
 

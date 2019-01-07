@@ -1,9 +1,10 @@
 const Router = require('express').Router();
 
 const { validarUsuario, validarSenha } = require('../../middleware/validacao');
+const { autenticarRequisicao } = require('../../middleware/auth');
 const controller = require('../../controller/usuarios');
 
-Router.post('/logout', controller.logout);
+Router.post('/logout', autenticarRequisicao, controller.logout);
 
 Router.use(validarUsuario);
 
