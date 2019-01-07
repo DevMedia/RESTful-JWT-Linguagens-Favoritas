@@ -31,7 +31,7 @@ const login = (req, res, next) => {
 
 const logout = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
-    return res.json(listarToken(token));
+    return listarToken(token).then(token => res.json(token));
 };
 
 module.exports = { cadastro, login, logout };
