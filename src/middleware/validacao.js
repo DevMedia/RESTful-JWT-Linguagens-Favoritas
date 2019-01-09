@@ -3,17 +3,14 @@ const passwordValidator = require('password-validator');
 
 const validarUsuario = (req, res, next) => {
     const usuario = req.body;
-
     const { email, senha } = usuario;
 
     if (!email || !senha) {
-        return res.status(400).json({
-            error: 'campos email e senha são obrigatórios'
-        });
+        return res.status(400).end();
     }
 
     if (!validate(email)) {
-        return res.status(400).json({ error: 'formato de email inválido' });
+        return res.status(400).end();
     }
 
     return next();
@@ -21,22 +18,16 @@ const validarUsuario = (req, res, next) => {
 
 const validarSenha = (req, res, next) => {
     const { senha } = req.body;
-
     const schema = new passwordValidator();
 
     schema
-        .is()
-        .min(8)
-        .has()
-        .lowercase()
-        .has()
-        .digits()
-        .has()
-        .not()
-        .spaces();
+        .is().min(8)
+        .has().lowercase()
+        .has().digits()
+        .has().not().spaces();
 
     if (!schema.validate(senha)) {
-        return res.status(400).json({ error: 'senha muito fraca' });
+        return res.status(400).end();
     }
     return next();
 };

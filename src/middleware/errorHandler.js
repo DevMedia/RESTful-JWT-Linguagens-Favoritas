@@ -9,9 +9,6 @@ const internalServer = (err, req, res, next) => {
 };
 
 const notFound = (req, res, next) => {
-    if (environment === 'production') {
-        return res.status(404).send();
-    }
-    return res.status(404).json({ error: 'não há nada aqui' });
+    return res.status(404).send();
 };
 module.exports = { internalServer, notFound };
