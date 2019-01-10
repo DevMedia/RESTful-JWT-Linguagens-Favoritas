@@ -4,14 +4,11 @@ const { randomBytes, pbkdf2Sync } = require('crypto');
 const environment = process.env.ENV || 'development';
 const { secret } = require('../config/config')[environment];
 
-const gerarJWT = (id, email, nome) => {
+const gerarJWT = (email, nome) => {
     const token = sign(
         {
-            usuario: {
-                id,
-                email,
-                nome
-            }
+            email,
+            nome
         },
         secret
     );

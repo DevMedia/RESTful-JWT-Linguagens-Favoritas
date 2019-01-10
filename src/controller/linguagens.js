@@ -21,9 +21,9 @@ const curtir = (req, res, next) => {
             if (!disponivel) {
                 return res
                     .status(409)
-                    .json({ error: 'Usuário já curte a linguagem.' });
+                    .end();
             }
-            return res.json({ message: 'Curtida com sucesso.' });
+            return res.end();
         })
         .catch(err => next(err));
 };

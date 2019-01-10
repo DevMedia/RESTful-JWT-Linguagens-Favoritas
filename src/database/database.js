@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const environment = process.env.ENV || 'development';
-const {
-    database: { name, port, host }
+const { 
+    database: { name, host } 
 } = require('../config/config')[environment];
 
 const connect = callback => {
