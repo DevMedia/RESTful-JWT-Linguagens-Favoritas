@@ -5,7 +5,7 @@ const {
 } = require('../repository/linguagens');
 
 const listar = (req, res, next) => {
-    const idUsuario = res.locals.payload.usuario.id;
+    const idUsuario = res.locals.payload.id;
 
     return listarLinguagens(idUsuario)
         .then(linguagens => res.json(linguagens))
@@ -14,7 +14,7 @@ const listar = (req, res, next) => {
 
 const curtir = (req, res, next) => {
     const idLinguagem = req.params.id;
-    const idUsuario = res.locals.payload.usuario.id;
+    const idUsuario = res.locals.payload.id;
 
     return curtirLinguagem(idLinguagem, idUsuario)
         .then(disponivel => {
