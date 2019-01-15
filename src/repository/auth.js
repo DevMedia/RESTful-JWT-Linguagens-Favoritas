@@ -19,6 +19,7 @@ const login = (email, senha) => {
     return Usuario.findOne({ email }).then(cadastrado => {
         if (cadastrado && senhaConfere(senha, cadastrado)) {
             return gerarJWT(
+                cadastrado.id,
                 cadastrado.email,
                 cadastrado.nome
             );
