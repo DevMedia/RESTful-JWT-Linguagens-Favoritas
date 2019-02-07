@@ -1,9 +1,9 @@
 # Aplicação back-end de linguagems favoritas
 Para uma explicação completa sobre esse código confira a Série Autenticação com JWT no Node.js + Angular https://www.devmedia.com.br/jwt-json-web-tokens/
 
-# Linguagens
+## Linguagens
 
-## Nesse documento encontram-se os comandos para popular o banco de dados MongoDB com algumas linguagens
+### Nesse documento encontram-se os comandos para popular o banco de dados MongoDB com algumas linguagens
 
 Para popular seu bando de dados abra seu terminal em linha de comando e digite :
 
